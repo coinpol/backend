@@ -1,0 +1,8 @@
+
+get all user
+------------
+/api/allUer/
+
+update user
+-----------
+/api/user/userId 
