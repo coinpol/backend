@@ -6,3 +6,63 @@ get all user
 update user
 -----------
 /api/user/userId 
+
+
+// coin spin area   
+
+create 
+
+/api/coin  === >                         {"_id":{"$oid":"1"},
+                                       "name":"test","time":"10.00",
+   {
+    "name":"teseeeeet",
+    "time":"10.00"
+}                                       "red":["1","2"],"black":[],"green":[],
+                                       "active":false,"wallet":{"$numberInt":"0"},
+                                        "result":"Not Published","createdAt":{"$date":{"$numberLong":"1694018431210"}}
+                                        ,"updatedAt":{"$date":{"$numberLong":"1694018431210"}},"__v":{"$numberInt":"0"}}
+
+
+// get coin spin
+/api/coin 
+
+
+update coin
+------------
+/api/coin/:id 
+
+fileds ==> name,red[],black[],green[],active,wallet,result
+
+
+
+
+//// get admin user 
+/api/admin    // get method
+
+// get all user without admin
+/api/allUser     // get method
+
+//create pricing
+/api/price     === post method
+   
+   body:{
+    "price":15,
+    "description":"hdgjhgsjd",
+    "benifit":"jhgfsjfd"
+   }
+
+
+// get price list
+
+/api/price
+
+// update price 
+/api/price/id
+
+  body:{
+    "price":15,
+    "description":"hdgjhgsjd",
+    "benifit":"jhgfsjfd"
+   }
+
+

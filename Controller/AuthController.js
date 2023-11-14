@@ -21,29 +21,29 @@ export const registerUser = async (req, res) => {
     const { email } = req.body
     try {
 
-        const transporter = nodemailer.createTransport({
-            host: "smtp.gmail.com",
-            port: 587,
-            secure: false,
-            requireTLS: true,
-            auth: {
-                user: process.env.MAIL,
-                pass: process.env.PASSCODE,
-            },
-            tls: {
-                ciphers: "SSLv3",
-            },
-        });
+        // const transporter = nodemailer.createTransport({
+        //     host: "smtp.gmail.com",
+        //     port: 587,
+        //     secure: false,
+        //     requireTLS: true,
+        //     auth: {
+        //         user: process.env.MAIL,
+        //         pass: process.env.PASSCODE,
+        //     },
+        //     tls: {
+        //         ciphers: "SSLv3",
+        //     },
+        // });
 
-        const otp = generateOTP();
-        userOTPData[email] = otp;
+        // const otp = generateOTP();
+        // userOTPData[email] = otp;
 
-        const mailOptions = {
-            // from: '',
-            to: email,
-            subject: 'Your OTP Code',
-            text: `Your OTP code is: ${otp}`
-        };
+        // const mailOptions = {
+        //     // from: '',
+        //     to: email,
+        //     subject: 'Your OTP Code',
+        //     text: `Your OTP code is: ${otp}`
+        // };
 
 
         const userOld = await UserModel.findOne({ email })
@@ -51,21 +51,21 @@ export const registerUser = async (req, res) => {
             res.status(400).json({ "msg": "user already registerd" })
         } else {
 
-            transporter.sendMail(mailOptions, (error, info) => {
-                if (error) {
-                    console.log('Error sending email:', error);
-                    res.status(500).json({ message: 'Failed to send OTP' });
-                } else {
-                    console.log('Email sent:', info.response);
-                    res.json({ message: 'OTP sent successfully' });
-                }
-            });
+            // transporter.sendMail(mailOptions, (error, info) => {
+            //     if (error) {
+            //         console.log('Error sending email:', error);
+            //         res.status(500).json({ message: 'Failed to send OTP' });
+            //     } else {
+            //         console.log('Email sent:', info.response);
+            //         res.json({ message: 'OTP sent successfully' });
+            //     }
+            // });
 
 
             const salt = await bcrypt.genSalt(10);
             const hashedPass = await bcrypt.hash(req.body.password, salt)
             req.body.password = hashedPass
-            req.body.otp = otp
+            // req.body.otp = otp
 
             const newUser = new UserModel(req.body)
 
@@ -124,7 +124,7 @@ export const loginUser = async (req, res) => {
             if (!validity) {
                 res.status(400).json({ message: "Wrong password" })
             } else {
-                if (user.otpVerify) {
+                if (!user.otpVerify) {
                     //jwt create
                     const token = jwt.sign({
                         username: user.email, id: user._id
@@ -197,40 +197,72 @@ export const reVerify = async (req, res) => {
         }
 
     } catch (error) {
-        res.status(500).json({"message":error.message})
+        res.status(500).json({ "message": error.message })
 
     }
 }
 
-// getAllUser
-export const getAllUser = async(req,res)=>{
-    try {
-        const allUser = await UserModel.find()
-       res.status(200).json({allUser,message:"All user get successfully"})
-        
-    } catch (error) {
-        res.status(500).json({"message":error.message})
-        
-    }
-}
+
 
 // updateUser
-export const updateUser = async(req,res)=>{
+export const updateUser = async (req, res) => {
     const id = req.params.id
     try {
-        const user = await UserModel.findOne({_id:id})
-        if(user){
+        const user = await UserModel.findOne({ _id: id })
+        if (user) {
             const update = await UserModel.findOneAndUpdate(
                 { _id: id },
                 { $set: req.body },
                 { new: true }
             )
-            res.status(200).json({update,message:"User udpate SuccessFully"})
+            res.status(200).json({ update, message: "User udpate SuccessFully" })
         }
-        
+
     } catch (error) {
-        res.status(500).json({"message":error.message})
-        
+        res.status(500).json({ "message": error.message })
+
     }
 
+}
+
+
+// getAllUser
+export const getAllUser = async (req, res) => {
+    try {
+        const  allUser  = await UserModel.find()
+        
+        if (allUser) {
+            const adminFilter = allUser?.filter((item) => {
+                if (item?.isAdmin === false) {
+                    return item
+                }
+            })
+            res.status(200).json({ adminFilter, message: "All user get successfully" })
+        }
+
+    } catch (error) {
+        res.status(500).json({ "message": error.message })
+
+    }
+}
+
+//get all admin list
+
+export const getAllAdmin = async (req, res) => {
+    try {
+        const  allUser  = await UserModel.find()
+        
+        if (allUser) {
+            const adminFilter = allUser?.filter((item) => {
+                if (!item?.isAdmin === false) {
+                    return item
+                }
+            })
+            res.status(200).json({ adminFilter, message: "All user get successfully" })
+        }
+
+    } catch (error) {
+        res.status(500).json({ "message": error.message })
+
+    }
 }

@@ -1,5 +1,5 @@
 import express from 'express'
-import {getAllUser, loginUser, reVerify, registerUser, updateUser, verifyOtp} from '../Controller/AuthController.js'
+import {getAllAdmin, getAllUser, loginUser, reVerify, registerUser, updateUser, verifyOtp} from '../Controller/AuthController.js'
 
 const router = express.Router()
 
@@ -8,7 +8,9 @@ router.post('/verify',verifyOtp)
 router.post('/login',loginUser) 
 router.post('/re_verify',reVerify)  
 router.get('/allUser',getAllUser)  
-router.patch('/user/:id',updateUser)  
+router.get('/user/:id',updateUser)  //
+router.get('/admin',getAllAdmin)  //
+
 
 
 
